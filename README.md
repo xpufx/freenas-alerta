@@ -7,3 +7,9 @@ TrueNAS/FreeNAS does not have a plugin for Alerta, nor does it have a facility t
 This simple script takes the alerts from the FreeNAS database using the included middleware client midclt and pushes them to the Alerta endpoint using curl, making some assumptions along the way.
 
 Currently the script just invokes midclt to get the info about ALL alerts without keeping track of their status and pushes them into Alerta. Alerta can take care of duplicates so this is not a big issue. 
+
+
+Add FreeNAS/TrueNAS Cron tak as:
+
+Put midclt_alerts.sh and .secrets in <PATH TO SOME LOCATION>
+cd <PATH TO SOME LOCATION>/bin/cron && /bin/bash ./midclt_alerts.sh
