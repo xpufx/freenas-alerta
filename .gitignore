@@ -1,1 +1,4 @@
 .secrets
+*.bkp
+*.bork
+temp.*
