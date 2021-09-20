@@ -66,6 +66,7 @@ do
 		"resource": "'$node'", 
 		"service": [ "'$SERVICE'" ], 
 		"severity": "'$level'", 
+		"value": "Dismissed: '$dismissed'", 
 		"text": '$formatted', 
 		"type": "exceptionAlert"  
 		}'
