@@ -8,8 +8,10 @@ This simple script takes the alerts from the FreeNAS database using the included
 
 Currently the script just invokes midclt to get the info about ALL alerts without keeping track of their status and pushes them into Alerta. Alerta can take care of duplicates so this is not a big issue. 
 
+Uses midclt, jq and wget which are all included on a TrueNAS install.
 
-Add FreeNAS/TrueNAS Cron tak as:
+
+Add FreeNAS/TrueNAS Cron task as:
 
 Put freenas-alerta.sh and .secrets in <PATH TO SOME LOCATION>
 cd <PATH TO SOME LOCATION>/bin/cron && /bin/bash ./midclt_alerts.sh

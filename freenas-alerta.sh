@@ -76,3 +76,4 @@ done
 
 # TODO
 # handle "dismissed" (push OK)
+# construct the json with jq
