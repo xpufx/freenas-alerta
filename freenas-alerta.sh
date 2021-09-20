@@ -79,8 +79,8 @@ do
 
 	
 	debugecho dismissed on freenas: ${dismissed}
-	echo enter to continue ...
-	read input
+	#echo enter to continue ...
+	#read input
 
 done
 
