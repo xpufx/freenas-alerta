@@ -11,5 +11,5 @@ Currently the script just invokes midclt to get the info about ALL alerts withou
 
 Add FreeNAS/TrueNAS Cron tak as:
 
-Put midclt_alerts.sh and .secrets in <PATH TO SOME LOCATION>
+Put freenas-alerta.sh and .secrets in <PATH TO SOME LOCATION>
 cd <PATH TO SOME LOCATION>/bin/cron && /bin/bash ./midclt_alerts.sh
