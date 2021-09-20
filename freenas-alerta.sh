@@ -12,7 +12,7 @@ source ./.secrets
 ENVIRONMENT="FreeNAS"
 ORIGIN="FreeNAS"
 SERVICE="FreeNAS Alert"
-DEBUG=true   		# set to true for debug messages. anything else means no debug messages
+DEBUG=false		# set to true for debug messages. anything else means no debug messages
 
 
 declare -A LEVEL
@@ -43,19 +43,34 @@ do
 	debugecho Record# ${i}
 
 	alerts=$(midclt call alert.list | jq  ".[$i]")
-	debugecho ${alerts}
+	debugecho "${alerts}"
+
+	dismissed="$(jq -r '.dismissed' <<< ${alerts})"
+
+	if [[ "${dismissed}" == "true" ]]; then
+	    continue
+	fi
 
 	uuid="$(jq -r '.uuid' <<< ${alerts})"
 	source="$(jq -r '.klass' <<< ${alerts})"
 	node="$(jq -r '.node' <<< ${alerts})"
-	dismissed="$(jq -r '.dismissed' <<< ${alerts})"
 	level=${LEVEL[$(jq -r '.level' <<< ${alerts})]}
 	formatted="$(jq -r '.formatted' <<< ${alerts} | jq -sR)"
 	
 
-	JSON='{ "environment": "'$ENVIRONMENT'", "event": "'$source'", "origin": "'$ORIGIN'", "resource": "'$node'", "service": [ "'$SERVICE'" ], "severity": "'$level'", "text": '$formatted', "type": "exceptionAlert" }'
+	JSON='
+		{ 
+		"environment": "'$ENVIRONMENT'", 
+		"event": "'$source'", 
+		"origin": "'$ORIGIN'",
+		"resource": "'$node'", 
+		"service": [ "'$SERVICE'" ], 
+		"severity": "'$level'", 
+		"text": '$formatted', 
+		"type": "exceptionAlert"  
+		}'
+	
 	debugecho ${JSON} |jq -r .
-
 	debugecho calling alerta
 	curl -XPOST ${ALERTA_ENDPOINT} \
 	-H 'Authorization: Key '${ALERTA_KEY}'' \
