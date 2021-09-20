@@ -8,11 +8,11 @@ set -o pipefail
 
 source ./.secrets
 
-#constants#
+#__constants__#
 ENVIRONMENT="FreeNAS"
 ORIGIN="FreeNAS"
 SERVICE="FreeNAS Alert"
-DEBUG=true
+DEBUG=true   		# set to true for debug messages. anything else means no debug messages
 
 
 declare -A LEVEL
@@ -26,23 +26,24 @@ LEVEL[EMERGENCY]=critical
 
 
 
-
-
-function debug {
-    if [ ! -z "$DEBUG" ]
+#__helper functions__#
+function debugecho {
+    if [ "$DEBUG" == "true" ]
     then
         echo "$*"
     fi
 }
+
+
 # get the number of alerts
 num=$( midclt call alert.list | jq length )
 
 for (( i=0; i<=$num-1; i++ ))
 do
-	debug Record# ${i}
+	debugecho Record# ${i}
 
 	alerts=$(midclt call alert.list | jq  ".[$i]")
-	debug ${alerts}
+	debugecho ${alerts}
 
 	uuid="$(jq -r '.uuid' <<< ${alerts})"
 	source="$(jq -r '.klass' <<< ${alerts})"
@@ -53,16 +54,16 @@ do
 	
 
 	JSON='{ "environment": "'$ENVIRONMENT'", "event": "'$source'", "origin": "'$ORIGIN'", "resource": "'$node'", "service": [ "'$SERVICE'" ], "severity": "'$level'", "text": '$formatted', "type": "exceptionAlert" }'
-	debug ${JSON} |jq -r .
+	debugecho ${JSON} |jq -r .
 
-	debug calling alerta
+	debugecho calling alerta
 	curl -XPOST ${ALERTA_ENDPOINT} \
 	-H 'Authorization: Key '${ALERTA_KEY}'' \
 	-H 'Content-type: application/json' \
 	-d "${JSON}"
 
-
-	echo dismissed on freenas: ${dismissed}
+	
+	debugecho dismissed on freenas: ${dismissed}
 	echo enter to continue ...
 	read input
 
