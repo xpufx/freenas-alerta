@@ -45,7 +45,7 @@ do
 	alerts=$(midclt call alert.list | jq  ".[$i]")
 	debugecho "${alerts}"
 
-	dismissed="$(jq -r '.dismissed' <<< ${alerts})"
+	dismissed="Dismissed? $(jq -r '.dismissed' <<< ${alerts})"
 
 	if [[ "${dismissed}" == "true" ]]; then
 	    continue
