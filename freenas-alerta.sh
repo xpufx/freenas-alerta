@@ -58,19 +58,34 @@ do
 	formatted="$(jq -r '.formatted' <<< ${alerts} | jq -sR)"
 	
 
-	JSON='
-		{ 
-		"environment": "'$ENVIRONMENT'", 
-		"event": "'$source'", 
-		"origin": "'$ORIGIN'",
-		"resource": "'$node'", 
-		"service": [ "'$SERVICE'" ], 
-		"severity": "'$level'", 
-		"value": "Dismissed: '$dismissed'", 
-		"text": '$formatted', 
-		"type": "exceptionAlert"  
-		}'
+	JSON_TEMPLATE='{
+		environment: $env, 
+		event: $src, 
+		origin: $org, 
+		resource: $nd, 
+		service: [ 
+			$srv 
+			], 
+		severity: $lvl, 
+		value: $dsm, 
+		text: $fmt,
+		type: "exceptionAlert"}'
+
+
+	JSON=$( jq -n \
+		--arg env "$ENVIRONMENT" \
+		--arg src "$source" \
+		--arg org "$ORIGIN" \
+		--arg nd "$node" \
+		--arg srv "$SERVICE" \
+		--arg lvl "$level" \
+		--arg dsm "$dismissed" \
+		--arg fmt "$formatted" \
+		"${JSON_TEMPLATE}")
+
+	echo ${JSON}
 	
+
 	debugecho ${JSON} |jq -r .
 	debugecho calling alerta
 	curl -XPOST ${ALERTA_ENDPOINT} \
@@ -92,5 +107,4 @@ done
 
 # TODO
 # handle "dismissed" (push OK)
-# construct the json with jq
 # test github.dev vscode
