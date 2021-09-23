@@ -12,6 +12,7 @@ Uses midclt, jq and wget which are all included on a TrueNAS install.
 
 
 Put freenas-alerta.sh and .secrets in \<PATH TO SOME LOCATION\>
+
 Add FreeNAS/TrueNAS Cron task as:
 
 ```cd  /<PATH TO SOME LOCATION> && /bin/bash ./freenas-alerta.sh```
