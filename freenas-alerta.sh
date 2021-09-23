@@ -12,7 +12,7 @@ ORIGIN="FreeNAS"
 SERVICE="FreeNAS Alert"
 DEBUG=false		# set to true for debug messages. anything else means no debug messages
 
-
+# modify below truenas/alerta severity/level mappings
 declare -A LEVEL
 LEVEL[INFO]=informational
 LEVEL[WARNING]=warning
