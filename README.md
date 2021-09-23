@@ -1,6 +1,7 @@
 # freenas-alerta
 Use FreeNAS middleware client to push alerts from Freenas to Alerta
 
+With minor changes it can be used to push the alerts to services other than Alerta as well.
 
 TrueNAS/FreeNAS does not have a plugin for Alerta, nor does it have a facility to use shell scripts or http/json for alerts.
 
