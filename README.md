@@ -15,3 +15,6 @@ Put freenas-alerta.sh and .secrets in <PATH TO SOME LOCATION>
 Add FreeNAS/TrueNAS Cron task as:
 
 cd  /\<PATH TO SOME LOCATION\>/bin/cron && /bin/bash ./midclt_alerts.sh
+
+ 
+When executed the script will always push alerts (no state tracking). It will pass the severity level translated from the TrueNAS values to Alerta values. You can change these in the script to fit your environment. When an alert is dismissed on the TrueNAS side it will be set to closed on Alerta and cleared (i.e turn GREEN). The dismissed alerts will keep being pushed to alerta due to not keeping track of state but it's not a huge problem on the Alerta side since the row will stay green.
