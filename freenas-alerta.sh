@@ -110,5 +110,3 @@ done
 
 
 # TODO
-# handle "dismissed" (push OK)
-# test github.dev vscode
