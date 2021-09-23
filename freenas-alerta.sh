@@ -45,42 +45,48 @@ do
 	alerts=$(midclt call alert.list | jq  ".[$i]")
 	debugecho "${alerts}"
 
-	dismissed="Dismissed? $(jq -r '.dismissed' <<< ${alerts})"
-
-	if [[ "${dismissed}" == "true" ]]; then
-	    continue
-	fi
-
 	uuid="$(jq -r '.uuid' <<< ${alerts})"
 	source="$(jq -r '.klass' <<< ${alerts})"
 	node="$(jq -r '.node' <<< ${alerts})"
 	level=${LEVEL[$(jq -r '.level' <<< ${alerts})]}
 	formatted="$(jq -r '.formatted' <<< ${alerts} | jq -sR)"
-	
+	dismissed="$(jq -r '.dismissed' <<< ${alerts})"
 
+	if [[ ${dismissed} = "true" ]]; then
+		status="closed"
+		level="cleared"
+	else
+		echo dis =  "${dismissed}"
+	fi
+
+	
+	# note that this is a literal template. i.e $ENVIRONMENT is not a bash variable
+	# it's a jq template value name
 	JSON_TEMPLATE='{
-		environment: $env, 
-		event: $src, 
-		origin: $org, 
-		resource: $nd, 
+		environment: $ENVIRONMENT, 
+		event: $source, 
+		origin: $ORIGIN, 
+		resource: $node, 
 		service: [ 
-			$srv 
+			$SERVICE
 			], 
-		severity: $lvl, 
-		value: $dsm, 
-		text: $fmt,
+		severity: $level, 
+		status: $status,
+		value: $dismissed, 
+		text: $formatted,
 		type: "exceptionAlert"}'
 
 
 	JSON=$( jq -n \
-		--arg env "$ENVIRONMENT" \
-		--arg src "$source" \
-		--arg org "$ORIGIN" \
-		--arg nd "$node" \
-		--arg srv "$SERVICE" \
-		--arg lvl "$level" \
-		--arg dsm "$dismissed" \
-		--arg fmt "$formatted" \
+		--arg ENVIRONMENT "$ENVIRONMENT" \
+		--arg source "$source" \
+		--arg ORIGIN "$ORIGIN" \
+		--arg node "$node" \
+		--arg SERVICE "$SERVICE" \
+		--arg level "$level" \
+		--arg status "$status" \
+		--arg dismissed "$dismissed" \
+		--arg formatted "$formatted" \
 		"${JSON_TEMPLATE}")
 
 	echo ${JSON}
