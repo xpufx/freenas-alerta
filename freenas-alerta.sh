@@ -3,8 +3,6 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-#set -o posix # this doesn't cause errors when non-posix things are used?
-#set -o xtrace # or run bash -x but that ignore the shebang
 
 source ./.secrets
 
